@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivo OnboardingX - Minha Trilha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .vivo-primary {
+            color: #5e00a5;
+        }
+
+        .vivo-secondary {
+            color: #2d00b3;
+        }
+
+        .vivo-gradient {
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .vivo-gradient-text {
+            background: linear-gradient(135deg, #5e00a5 0%, #2d00b3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .roadmap-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .roadmap-card {
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6a0dad 0%, #00008b 100%);
+            transition: width 0.5s ease;
+        }
+
+        .roadmap-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 24px;
+        }
+
+        .roadmap-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .roadmap-item::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 30px;
+            bottom: -24px;
+            width: 2px;
+            background-color: #e5e7eb;
+        }
+
+        .roadmap-item:last-child::before {
+            display: none;
+        }
+
+        .roadmarker {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #e5e7eb;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .roadmap-item.completed .roadmarker {
+            background-color: #6a0dad;
+            border-color: #6a0dad;
+            color: white;
+        }
+
+        .roadmap-item.current .roadmarker {
+            background-color: white;
+            border-color: #6a0dad;
+            color: #6a0dad;
+            box-shadow: 0 0 0 4px rgba(106, 13, 173, 0.2);
+        }
+
+        .roadmap-item.pending .roadmarker {
+            background-color: white;
+            border-color: #e5e7eb;
+            color: #9ca3af;
+        }
+
+        .roadmap-item.completed::before {
+            background-color: #6a0dad;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background-color: #f0f9ff;
+            color: #0369a1;
+        }
+
+        .status-current {
+            background-color: #f5f3ff;
+            color: #6a0dad;
+        }
+
+        .status-pending {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .resource-card {
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: #d1d5db;
+        }
+
+        .resource-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f3ff;
+            color: #6a0dad;
+        }
+
+        .current-phase {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(106, 13, 173, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(106, 13, 173, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(106, 13, 173, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="vivo-gradient text-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="https://www.vivo.com.br/content/dam/vivo-sites/vivo-com-br/homepage/logo-vivo.svg"
+                    alt="Vivo Logo" class="h-8">
+                <span class="font-semibold">OnboardingX</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <div
+                            class="w-8 h-8 rounded-full bg-white text-purple-800 flex items-center justify-center font-semibold">
+                            JD</div>
+                        <span class="hidden md:inline">João da Silva</span>
+                        <i class="fas fa-chevron-down text-xs hidden md:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="roadmap-container px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Side - User Info and Progress -->
+            <div class="w-full lg:w-1/3">
+                <div class="roadmap-card bg-white p-6 mb-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div
+                            class="w-16 h-16 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center font-semibold text-2xl">
+                            JD</div>
+                        <div>
+                            <h2 class="font-bold text-xl">João da Silva</h2>
+                            <p class="text-gray-600">Desenvolvedor Front-end</p>
+                            <p class="text-sm text-gray-500">Data de ingresso: 15/05/2024</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">Progresso do Onboarding</span>
+                            <span class="font-semibold">40%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Etapas completas</span>
+                            <span class="text-sm font-medium">4 de 10</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Dias na Vivo</span>
+                            <span class="text-sm font-medium">12 dias</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Próxima etapa</span>
+                            <span class="text-sm font-medium">Vibe: Benefícios</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="roadmap-card bg-white p-6">
+                    <h3 class="font-bold text-lg mb-4">Recursos úteis</h3>
+                    <div class="space-y-4">
+                        <a href="#" class="resource-card block p-4 rounded-lg">
+                            <div class="flex items-center space-x-4">
+                                <div class="resource-icon">
+                                    <i class="fas fa-question-circle text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Central de Ajuda</h4>
+                                    <p class="text-sm text-gray-600">Tire suas dúvidas sobre o onboarding</p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="#" class="resource-card block p-4 rounded-lg">
+                            <div class="flex items-center space-x-4">
+                                <div class="resource-icon">
+                                    <i class="fas fa-user-friends text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Meu Buddy</h4>
+                                    <p class="text-sm text-gray-600">Entre em contato com seu mentor</p>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="#" class="resource-card block p-4 rounded-lg">
+                            <div class="flex items-center space-x-4">
+                                <div class="resource-icon">
+                                    <i class="fas fa-calendar-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Agenda de Treinamentos</h4>
+                                    <p class="text-sm text-gray-600">Veja os próximos eventos</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Roadmap -->
+            <div class="w-full lg:w-2/3">
+                <div class="roadmap-card bg-white p-6 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold">Minha Trilha de Onboarding</h1>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-medium">Filtro:</span>
+                            <select
+                                class="text-sm border rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-purple-500">
+                                <option>Todas as etapas</option>
+                                <option>Completas</option>
+                                <option>Pendentes</option>
+                                <option>Atuais</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Current Phase Highlight -->
+                    <div class="current-phase bg-purple-50 border border-purple-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-purple-100 text-purple-800 p-2 rounded-lg">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Você está aqui: <span class="text-purple-800">Vibe: Escolha de
+                                        benefícios</span></h3>
+                                <p class="text-sm text-gray-600">Complete esta etapa para avançar na sua jornada</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Roadmap Timeline -->
+                    <div class="space-y-1">
+                        <!-- Completed Item -->
+                        <div class="roadmap-item completed">
+                            <div class="roadmarker">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="p-4 rounded-lg bg-gray-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">1. Tô na Vivo</h3>
+                                        <p class="text-gray-600">Orientações iniciais do RH e recomendação de primeiros
+                                            acessos</p>
+                                    </div>
+                                    <span class="status-badge status-completed">Concluído</span>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span>Concluído em: 15/05/2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Item -->
+                        <div class="roadmap-item completed">
+                            <div class="roadmarker">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="p-4 rounded-lg bg-gray-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">2. Treinamentos iniciais</h3>
+                                        <p class="text-gray-600">Treinamentos obrigatórios, normas e políticas gerais
+                                        </p>
+                                    </div>
+                                    <span class="status-badge status-completed">Concluído</span>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span>Concluído em: 17/05/2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Item -->
+                        <div class="roadmap-item completed">
+                            <div class="roadmarker">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="p-4 rounded-lg bg-gray-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">3. Acessos iniciais</h3>
+                                        <p class="text-gray-600">Início da solicitação de acesso as plataformas da TI
+                                        </p>
+                                    </div>
+                                    <span class="status-badge status-completed">Concluído</span>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span>Concluído em: 20/05/2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Item -->
+                        <div class="roadmap-item completed">
+                            <div class="roadmarker">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="p-4 rounded-lg bg-gray-50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">4. Buddy e CSL</h3>
+                                        <p class="text-gray-600">Indicação de Buddy e Controle de Acesso, que apoiam no
+                                            onboarding e credenciais</p>
+                                    </div>
+                                    <span class="status-badge status-completed">Concluído</span>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span>Concluído em: 22/05/2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Item -->
+                        <div class="roadmap-item current">
+                            <div class="roadmarker">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                            <div class="p-4 rounded-lg bg-purple-50 border border-purple-200">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">5. Vibe: Benefícios</h3>
+                                        <p class="text-gray-600">Escolha dos benefícios corporativos na plataforma</p>
+                                    </div>
+                                    <span class="status-badge status-current">Em andamento</span>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="#"
+                                        class="inline-flex items-center text-purple-600 font-medium hover:underline">
+                                        Acessar plataforma Vibe
+                                        <i class="fas fa-chevron-right ml-1 text-sm"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Item -->
+                        <div class="roadmap-item pending">
+                            <div class="roadmarker">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <div class="p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">6. Tô na TI</h3>
+                                        <p class="text-gray-600">Apresentação da estrutura, áreas, papéis e principais
+                                            plataformas da TI</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pendente</span>
+                                </div>
+                                <div class="mt-3 text-sm text-gray-500">
+                                    <span>Disponível a partir de: 30/05/2024</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Item -->
+                        <div class="roadmap-item pending">
+                            <div class="roadmarker">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <div class="p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">7. Acessos áreas</h3>
+                                        <p class="text-gray-600">Solicitação de acessos as plataformas específicas de
+                                            trabalho</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pendente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Item -->
+                        <div class="roadmap-item pending">
+                            <div class="roadmarker">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <div class="p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">8. Voz do Colaborador 30d</h3>
+                                        <p class="text-gray-600">Pesquisa de mapeamento de satisfação e progresso</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pendente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Item -->
+                        <div class="roadmap-item pending">
+                            <div class="roadmarker">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <div class="p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">9. Trilhas técnicas</h3>
+                                        <p class="text-gray-600">Trilhas específicas das áreas de conhecimento na TI</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pendente</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Item -->
+                        <div class="roadmap-item pending">
+                            <div class="roadmarker">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <div class="p-4 rounded-lg">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="font-bold text-lg">10. Voz do Colaborador 90d</h3>
+                                        <p class="text-gray-600">Pesquisa de mapeamento de satisfação e progresso</p>
+                                    </div>
+                                    <span class="status-badge status-pending">Pendente</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="roadmap-card bg-white p-6">
+                    <h3 class="font-bold text-lg mb-4">Próximos passos</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-blue-100 text-blue-800 p-2 rounded-lg">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Agendar reunião com Buddy</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Seu Buddy está disponível para tirar dúvidas
+                                        sobre benefícios</p>
+                                    <button class="mt-2 text-sm text-blue-600 hover:underline">Agendar agora</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-green-100 text-green-800 p-2 rounded-lg">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Documentação de benefícios</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Revise o material sobre os benefícios
+                                        disponíveis</p>
+                                    <button class="mt-2 text-sm text-green-600 hover:underline">Acessar
+                                        documentos</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simulate loading animation
+        document.addEventListener('DOMContentLoaded', function () {
+            // This would be replaced with actual data from an API in a real application
+            console.log('Roadmap page loaded');
+
+            // Example of interactive functionality
+            const roadmapItems = document.querySelectorAll('.roadmap-item');
+            roadmapItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    // In a real app, this would navigate to the specific step details
+                    if (this.classList.contains('current')) {
+                        console.log('Navigating to current step details');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

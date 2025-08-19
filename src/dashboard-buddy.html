@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivo OnboardingX - Buddy Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .vivo-gradient {
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .vivo-gradient-text {
+            background: linear-gradient(135deg, #5e00a5 0%, #2d00b3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-track {
+            height: 4px;
+            background-color: #e5e7eb;
+        }
+
+        .progress-track::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 8%;
+            background-color: #6a0dad;
+            transition: width 0.5s ease;
+        }
+
+        .step-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-indicator.completed::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            width: 100px;
+            height: 2px;
+            background-color: #6a0dad;
+        }
+
+        .mentee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #FF5722;
+        }
+
+        .initials-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .journey-connector {
+            position: absolute;
+            top: 50%;
+            left: -20px;
+            width: 20px;
+            height: 2px;
+            background-color: #e5e7eb;
+        }
+
+        .journey-connector.completed {
+            background-color: #6a0dad;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen bg-gray-50">
+    <!-- Side Navigation -->
+    <div class="w-20 md:w-64 bg-white shadow-lg flex flex-col transition-all duration-300">
+        <!-- Logo -->
+        <div class="p-4 flex items-center justify-center border-b">
+            <img src="https://www.vivo.com.br/content/dam/vivo-sites/vivo-com-br/homepage/logo-vivo.svg" alt="Vivo Logo"
+                class="h-8">
+            <span class="ml-2 text-xl font-bold vivo-gradient-text hidden md:block">OnboardingX</span>
+        </div>
+
+        <!-- User Profile -->
+        <div class="p-4 flex items-center border-b">
+            <div class="relative">
+                <div class="w-12 h-12 rounded-full bg-purple-600 initials-avatar">AS</div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+            </div>
+            <div class="ml-3 hidden md:block">
+                <p class="font-semibold">Ana Silva</p>
+                <p class="text-xs text-gray-500">Buddy (Mentor)</p>
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <nav class="flex-1 overflow-y-auto">
+            <ul class="p-2">
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg bg-purple-50 text-purple-700">
+                        <i class="fas fa-tachometer-alt text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-users text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Mentorados</span>
+                        <span
+                            class="ml-auto bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full hidden md:block">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-calendar-alt text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Agenda</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-tasks text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Checklists</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-chart-line text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-cog text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Footer -->
+        <div class="p-4 border-t">
+            <a href="#" class="flex items-center p-2 text-red-600 rounded-lg hover:bg-red-50">
+                <i class="fas fa-sign-out-alt mr-3 text-lg"></i>
+                <span class="hidden md:block">Sair</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-semibold text-gray-800">Dashboard do Buddy</h1>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="p-2 rounded-full hover:bg-gray-100 relative">
+                        <i class="fas fa-bell text-gray-600 text-lg"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 initials-avatar text-sm md:hidden">AS</div>
+                    <span class="ml-2 text-sm font-medium hidden md:block">Ana Silva</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-4 md:p-6">
+            <!-- Welcome Section -->
+            <div class="vivo-gradient text-white rounded-xl p-6 mb-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-bold mb-2">Bem-vinda, Ana!</h2>
+                        <p class="opacity-90 text-sm md:text-base">Você está acompanhando 3 mentorados em seu processo
+                            de onboarding.</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                        <i class="fas fa-hands-helping text-2xl md:text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mentee Selection -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Selecione um Mentorado</h3>
+                    <div class="relative w-32 md:w-64">
+                        <input type="text" placeholder="Buscar..."
+                            class="w-full pl-8 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Mentee Card 1 -->
+                    <div
+                        class="mentee-card border rounded-lg p-4 hover:border-purple-500 transition-all cursor-pointer">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 initials-avatar">CO</div>
+                            <div class="ml-3">
+                                <p class="font-semibold text-sm md:text-base">Carlos Oliveira</p>
+                                <p class="text-xs text-gray-500">Dev Front-end</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs md:text-sm">
+                            <span class="text-gray-600">Dia 12/90</span>
+                            <span class="font-medium text-purple-600">Ativo</span>
+                        </div>
+                    </div>
+
+                    <!-- Mentee Card 2 (Selected) -->
+                    <div
+                        class="mentee-card border-2 border-purple-500 rounded-lg p-4 bg-purple-50 transition-all cursor-pointer">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-pink-600 initials-avatar">JS</div>
+                            <div class="ml-3">
+                                <p class="font-semibold text-sm md:text-base">Juliana Santos</p>
+                                <p class="text-xs text-gray-500">Analista de Dados</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs md:text-sm">
+                            <span class="text-gray-600">Dia 8/90</span>
+                            <span class="font-medium text-green-600">Em progresso</span>
+                        </div>
+                    </div>
+
+                    <!-- Mentee Card 3 -->
+                    <div
+                        class="mentee-card border rounded-lg p-4 hover:border-purple-500 transition-all cursor-pointer">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-indigo-600 initials-avatar">RA</div>
+                            <div class="ml-3">
+                                <p class="font-semibold text-sm md:text-base">Ricardo Almeida</p>
+                                <p class="text-xs text-gray-500">Product Manager</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-xs md:text-sm">
+                            <span class="text-gray-600">Dia 20/90</span>
+                            <span class="font-medium text-blue-600">Finalizando</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Current Step -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-map-marker-alt text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Etapa Atual</h3>
+                            <p class="text-sm text-gray-500">2. Treinamentos Iniciais</p>
+                        </div>
+                    </div>
+                    <div class="progress-track relative mb-2"></div>
+                    <div class="flex justify-between text-xs text-gray-600">
+                        <span>Dia 8</span>
+                        <span>90 dias</span>
+                    </div>
+                </div>
+
+                <!-- Next Step -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-flag text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Próxima Etapa</h3>
+                            <p class="text-sm text-gray-500">3. Vibe - Benefícios</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-sm text-blue-600">
+                        <i class="fas fa-calendar-day mr-2"></i>
+                        <span>Previsto para 12/06/2023</span>
+                    </div>
+                </div>
+
+                <!-- Engagement Score -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-heart text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Engajamento</h3>
+                            <p class="text-sm text-gray-500">Score atual</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-800 mr-2">84</span>
+                        <span class="text-sm text-gray-500 mb-1">/100</span>
+                        <span class="ml-auto text-green-600 text-sm font-medium">+12%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onboarding Journey -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-700">Trilha de Onboarding</h3>
+                    <button class="text-purple-600 text-sm font-medium">Ver completo</button>
+                </div>
+
+                <div class="relative">
+                    <div class="flex overflow-x-auto pb-4">
+                        <div class="flex space-x-8">
+                            <!-- Step 1 - Completed -->
+                            <div class="flex flex-col items-center w-40 flex-shrink-0 relative">
+                                <div class="journey-connector completed"></div>
+                                <div class="step-indicator bg-green-500 text-white mb-2">
+                                    <i class="fas fa-check text-xs"></i>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-sm font-medium">1. Tô na Vivo</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Orientações iniciais</p>
+                                    <div
+                                        class="mt-2 text-xs bg-green-100 text-green-800 rounded-full px-2 py-1 inline-block">
+                                        Concluído</div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 - Current -->
+                            <div class="flex flex-col items-center w-40 flex-shrink-0 relative">
+                                <div class="journey-connector completed"></div>
+                                <div class="step-indicator bg-purple-600 text-white mb-2">
+                                    <i class="fas fa-spinner text-xs"></i>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-sm font-medium">2. Treinamentos</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Normas e políticas</p>
+                                    <div
+                                        class="mt-2 text-xs bg-purple-100 text-purple-800 rounded-full px-2 py-1 inline-block">
+                                        Em andamento</div>
+                                    <div class="mt-1 text-xs text-purple-600">8/12 dias</div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 - Next -->
+                            <div class="flex flex-col items-center w-40 flex-shrink-0 relative">
+                                <div class="journey-connector"></div>
+                                <div class="step-indicator bg-blue-100 text-blue-600 mb-2">
+                                    <span class="text-xs">3</span>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-sm font-medium">3. Vibe</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Benefícios corporativos</p>
+                                    <div
+                                        class="mt-2 text-xs bg-blue-100 text-blue-800 rounded-full px-2 py-1 inline-block">
+                                        Próximo</div>
+                                    <div class="mt-1 text-xs text-blue-600">Inicia em 4 dias</div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="flex flex-col items-center w-40 flex-shrink-0 relative">
+                                <div class="journey-connector"></div>
+                                <div class="step-indicator bg-gray-100 text-gray-600 mb-2">
+                                    <span class="text-xs">4</span>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-sm font-medium">4. Acessos</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Plataformas da TI</p>
+                                    <div
+                                        class="mt-2 text-xs bg-gray-100 text-gray-800 rounded-full px-2 py-1 inline-block">
+                                        Pendente</div>
+                                </div>
+                            </div>
+
+                            <!-- Step 5 -->
+                            <div class="flex flex-col items-center w-40 flex-shrink-0 relative">
+                                <div class="journey-connector"></div>
+                                <div class="step-indicator bg-gray-100 text-gray-600 mb-2">
+                                    <span class="text-xs">5</span>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="text-sm font-medium">5. Buddy e CSL</h4>
+                                    <p class="text-xs text-gray-500 mt-1">Suporte no onboarding</p>
+                                    <div
+                                        class="mt-2 text-xs bg-gray-100 text-gray-800 rounded-full px-2 py-1 inline-block">
+                                        Pendente</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- Schedule Meeting -->
+                <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all cursor-pointer">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-purple-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-video text-purple-600"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">Agendar 1:1</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">Reunião individual para acompanhamento</p>
+                    <button
+                        class="w-full py-1.5 bg-purple-600 text-white rounded-lg text-xs font-medium">Agendar</button>
+                </div>
+
+                <!-- Send Feedback -->
+                <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all cursor-pointer">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-comment-dots text-blue-600"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">Enviar Feedback</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">Compartilhe observações sobre o progresso</p>
+                    <button class="w-full py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium">Enviar</button>
+                </div>
+
+                <!-- Share Resources -->
+                <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all cursor-pointer">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-book text-green-600"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">Recursos</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">Materiais úteis para próxima etapa</p>
+                    <button
+                        class="w-full py-1.5 bg-green-600 text-white rounded-lg text-xs font-medium">Compartilhar</button>
+                </div>
+
+                <!-- Request Support -->
+                <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-all cursor-pointer">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-orange-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-hands-helping text-orange-600"></i>
+                        </div>
+                        <h3 class="text-sm font-semibold">Suporte</h3>
+                    </div>
+                    <p class="text-xs text-gray-600 mb-3">Peça ajuda de outros departamentos</p>
+                    <button
+                        class="w-full py-1.5 bg-orange-600 text-white rounded-lg text-xs font-medium">Solicitar</button>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Atividades Recentes</h3>
+                    <button class="text-purple-600 text-sm font-medium">Ver todas</button>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Activity 1 -->
+                    <div class="flex items-start pb-4 border-b border-gray-100">
+                        <div class="bg-purple-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-check-circle text-purple-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Juliana completou "Tô na Vivo"</p>
+                            <p class="text-xs text-gray-500">05/06/2023 14:30</p>
+                        </div>
+                        <span class="text-xs text-gray-400">3 dias</span>
+                    </div>
+
+                    <!-- Activity 2 -->
+                    <div class="flex items-start pb-4 border-b border-gray-100">
+                        <div class="bg-blue-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-comment-alt text-blue-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Feedback enviado</p>
+                            <p class="text-xs text-gray-500">07/06/2023 16:45</p>
+                        </div>
+                        <span class="text-xs text-gray-400">1 dia</span>
+                    </div>
+
+                    <!-- Activity 3 -->
+                    <div class="flex items-start">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-book text-green-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Recursos compartilhados</p>
+                            <p class="text-xs text-gray-500">06/06/2023 10:15</p>
+                        </div>
+                        <span class="text-xs text-gray-400">2 dias</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize charts
+            const engagementCtx = document.createElement('canvas').getContext('2d');
+            const trendCtx = document.createElement('canvas').getContext('2d');
+            const skillsCtx = document.createElement('canvas').getContext('2d');
+
+            // Simulate chart data
+            setTimeout(() => {
+                document.querySelector('.progress-track::after').style.width = '8%';
+            }, 500);
+
+            // Add hover effects to action cards
+            const actionCards = document.querySelectorAll('.bg-white.rounded-xl.shadow-md');
+            actionCards.forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    const icon = this.querySelector('div > div');
+                    if (icon.classList.contains('bg-purple-100')) {
+                        icon.classList.replace('bg-purple-100', 'bg-purple-200');
+                    } else if (icon.classList.contains('bg-blue-100')) {
+                        icon.classList.replace('bg-blue-100', 'bg-blue-200');
+                    } else if (icon.classList.contains('bg-green-100')) {
+                        icon.classList.replace('bg-green-100', 'bg-green-200');
+                    } else if (icon.classList.contains('bg-orange-100')) {
+                        icon.classList.replace('bg-orange-100', 'bg-orange-200');
+                    }
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    const icon = this.querySelector('div > div');
+                    if (icon.classList.contains('bg-purple-200')) {
+                        icon.classList.replace('bg-purple-200', 'bg-purple-100');
+                    } else if (icon.classList.contains('bg-blue-200')) {
+                        icon.classList.replace('bg-blue-200', 'bg-blue-100');
+                    } else if (icon.classList.contains('bg-green-200')) {
+                        icon.classList.replace('bg-green-200', 'bg-green-100');
+                    } else if (icon.classList.contains('bg-orange-200')) {
+                        icon.classList.replace('bg-orange-200', 'bg-orange-100');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

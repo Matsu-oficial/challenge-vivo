@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivo OnboardingX - Acesso Mentores</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .vivo-gradient {
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .vivo-gradient-text {
+            background: linear-gradient(135deg, #5e00a5 0%, #2d00b3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .input-field:focus-within {
+            transform: translateY(-2px);
+        }
+
+        .input-field:focus-within i {
+            color: #6a0dad;
+        }
+
+        .floating-label {
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .input-field input:focus+.floating-label,
+        .input-field input:not(:placeholder-shown)+.floating-label {
+            transform: translateY(-22px) scale(0.85);
+            color: #6a0dad;
+        }
+
+        .role-selector {
+            transition: all 0.3s ease;
+        }
+
+        .role-selector:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-selector.selected {
+            border-color: #6a0dad;
+            background-color: #f5f0ff;
+        }
+
+        .login-btn {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(106, 13, 173, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(106, 13, 173, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .bg-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .blob-1 {
+            background: #6a0dad;
+            top: -200px;
+            right: -200px;
+        }
+
+        .blob-2 {
+            background: #00008b;
+            bottom: -150px;
+            left: -150px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gray-50">
+    <!-- Background elements -->
+    <div class="bg-pattern"></div>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+
+    <div class="login-container w-full px-4 py-8">
+        <!-- Logo Header -->
+        <div class="text-center mb-8">
+            <img src="https://www.vivo.com.br/content/dam/vivo-sites/vivo-com-br/homepage/logo-vivo.svg" alt="Vivo Logo"
+                class="h-10 mx-auto mb-4">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Onboarding<span class="vivo-gradient-text">X</span></h1>
+            <p class="text-gray-600">Acompanhamento de onboarding para mentores e gestores</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <!-- Role Selector -->
+            <div class="flex border-b">
+                <div class="w-1/2">
+                    <button id="mentorBtn"
+                        class="role-selector selected w-full py-4 px-6 text-center border-b-2 border-transparent focus:outline-none">
+                        <i class="fas fa-hands-helping text-2xl mb-2"></i>
+                        <h3 class="font-semibold">Mentor (Buddy)</h3>
+                        <p class="text-xs text-gray-500 mt-1">Acompanhe seus mentorados</p>
+                    </button>
+                </div>
+                <div class="w-1/2">
+                    <button id="managerBtn"
+                        class="role-selector w-full py-4 px-6 text-center border-b-2 border-transparent focus:outline-none">
+                        <i class="fas fa-user-tie text-2xl mb-2"></i>
+                        <h3 class="font-semibold">Gestor</h3>
+                        <p class="text-xs text-gray-500 mt-1">Gerencie sua equipe</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="p-6">
+                <form id="loginForm">
+                    <!-- Email Field -->
+                    <div class="input-field mb-6">
+                        <div class="relative">
+                            <input type="email" id="email"
+                                class="w-full px-4 py-3 pl-11 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                placeholder=" " required>
+                            <i class="fas fa-envelope absolute left-3 top-3.5 text-gray-400"></i>
+                            <label for="email"
+                                class="floating-label absolute left-11 top-3 text-gray-500 bg-white px-1">E-mail
+                                corporativo</label>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="input-field mb-6">
+                        <div class="relative">
+                            <input type="password" id="password"
+                                class="w-full px-4 py-3 pl-11 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                placeholder=" " required>
+                            <i class="fas fa-lock absolute left-3 top-3.5 text-gray-400"></i>
+                            <label for="password"
+                                class="floating-label absolute left-11 top-3 text-gray-500 bg-white px-1">Senha</label>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <input id="remember" type="checkbox"
+                                class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                            <label for="remember" class="ml-2 block text-sm text-gray-700">Lembrar-me</label>
+                        </div>
+                        <a href="#" class="text-sm text-purple-600 hover:underline">Esqueceu a senha?</a>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit"
+                        class="login-btn w-full vivo-gradient text-white py-3 px-4 rounded-lg font-semibold text-lg">
+                        Acessar Plataforma
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>Novo no sistema? <a href="#" class="text-purple-600 hover:underline">Solicite acesso</a></p>
+            <p class="mt-2">Problemas para acessar? <a href="#" class="text-purple-600 hover:underline">Contate o
+                    suporte</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Role selection
+            const mentorBtn = document.getElementById('mentorBtn');
+            const managerBtn = document.getElementById('managerBtn');
+
+            mentorBtn.addEventListener('click', function () {
+                mentorBtn.classList.add('selected');
+                managerBtn.classList.remove('selected');
+                mentorBtn.classList.add('border-purple-600');
+                managerBtn.classList.remove('border-purple-600');
+            });
+
+            managerBtn.addEventListener('click', function () {
+                managerBtn.classList.add('selected');
+                mentorBtn.classList.remove('selected');
+                managerBtn.classList.add('border-purple-600');
+                mentorBtn.classList.remove('border-purple-600');
+            });
+
+            // Form submission
+            const loginForm = document.getElementById('loginForm');
+
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const isMentor = mentorBtn.classList.contains('selected');
+
+                // In a real app, this would validate and send to backend
+                console.log('Login attempt as:', isMentor ? 'Mentor' : 'Manager');
+                console.log('Email:', email);
+
+                // Simulate loading
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Carregando...';
+                submitBtn.disabled = true;
+
+                // Simulate API call
+                setTimeout(function () {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+
+                    // Redirect to dashboard (simulated)
+                    window.location.href = isMentor ? 'mentor-dashboard.html' : 'manager-dashboard.html';
+                }, 1500);
+            });
+
+            // Input field animations
+            const inputs = document.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                input.addEventListener('focus', function () {
+                    this.parentElement.parentElement.classList.add('ring-2', 'ring-purple-200');
+                });
+
+                input.addEventListener('blur', function () {
+                    this.parentElement.parentElement.classList.remove('ring-2', 'ring-purple-200');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

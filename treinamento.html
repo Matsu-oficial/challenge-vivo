@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivo OnboardingX - Centro de Treinamentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .vivo-primary {
+            color: #5e00a5;
+        }
+
+        .vivo-secondary {
+            color: #2d00b3;
+        }
+
+        .vivo-gradient {
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .vivo-gradient-text {
+            background: linear-gradient(135deg, #5e00a5 0%, #2d00b3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .training-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .training-card {
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .training-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6a0dad 0%, #00008b 100%);
+            transition: width 0.5s ease;
+        }
+
+        .training-item {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .training-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            border-color: #d1d5db;
+        }
+
+        .training-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .mandatory {
+            background-color: rgba(94, 0, 165, 0.1);
+            color: #5e00a5;
+        }
+
+        .recommended {
+            background-color: rgba(45, 0, 179, 0.1);
+            color: #2d00b3;
+        }
+
+        .optional {
+            background-color: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .status-in-progress {
+            background-color: rgba(167, 139, 250, 0.1);
+            color: #8b5cf6;
+        }
+
+        .status-pending {
+            background-color: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .highlight-card {
+            animation: pulse 2s infinite;
+            border-left: 4px solid #6a0dad;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(106, 13, 173, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(106, 13, 173, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(106, 13, 173, 0);
+            }
+        }
+
+        .tab-button {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: #6a0dad;
+            font-weight: 600;
+        }
+
+        .tab-button.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6a0dad 0%, #00008b 100%);
+            border-radius: 3px;
+        }
+
+        /* Gamification styles */
+        .badge {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-locked {
+            filter: grayscale(100%);
+            opacity: 0.6;
+        }
+
+        .badge-earned {
+            animation: bounce 0.5s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .xp-bar {
+            height: 12px;
+            border-radius: 6px;
+            background-color: #e5e7eb;
+        }
+
+        .xp-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #f59e0b 0%, #f97316 100%);
+        }
+
+        .level-indicator {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .streak {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background-color: #fef3c7;
+            color: #92400e;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .leaderboard-item {
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            transform: scale(1.02);
+            background-color: #f8fafc;
+        }
+
+        .achievement-card {
+            transition: all 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 6px 15px rgba(106, 13, 173, 0.3);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(106, 13, 173, 0.4);
+        }
+
+        .quest-card {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .quest-card:hover {
+            transform: translateX(5px);
+        }
+
+        .quest-primary {
+            border-left-color: #6a0dad;
+            background-color: rgba(106, 13, 173, 0.05);
+        }
+
+        .quest-secondary {
+            border-left-color: #2d00b3;
+            background-color: rgba(45, 0, 179, 0.05);
+        }
+
+        .quest-success {
+            border-left-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.05);
+        }
+
+        .quest-warning {
+            border-left-color: #f59e0b;
+            background-color: rgba(245, 158, 11, 0.05);
+        }
+
+        .floating-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: slideIn 0.5s forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .progress-ring-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .progress-ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #6a0dad;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="vivo-gradient text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <img src="https://www.vivo.com.br/content/dam/vivo-sites/vivo-com-br/homepage/logo-vivo.svg"
+                    alt="Vivo Logo" class="h-8">
+                <span class="font-semibold text-xl">OnboardingX</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="text-white hover:text-purple-200 transition flex items-center">
+                    <i class="fas fa-home mr-2"></i> <span class="hidden md:inline">Minha Trilha</span>
+                </a>
+                <a href="treinamentos.html" class="text-white font-semibold border-b-2 border-white flex items-center">
+                    <i class="fas fa-graduation-cap mr-2"></i> <span class="hidden md:inline">Treinamentos</span>
+                </a>
+                <a href="conquistas.html" class="text-white hover:text-purple-200 transition flex items-center">
+                    <i class="fas fa-trophy mr-2"></i> <span class="hidden md:inline">Conquistas</span>
+                </a>
+                <div class="relative">
+                    <button class="flex items-center space-x-2 focus:outline-none">
+                        <div
+                            class="w-10 h-10 rounded-full bg-white text-purple-800 flex items-center justify-center font-semibold text-lg">
+                            JD</div>
+                        <span class="hidden md:inline">João da Silva</span>
+                        <i class="fas fa-chevron-down text-xs hidden md:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="training-container px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Left Side - User Info and Progress -->
+            <div class="w-full lg:w-1/3 space-y-6">
+                <!-- User Profile Card -->
+                <div class="training-card bg-white p-6">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="relative">
+                            <div
+                                class="w-20 h-20 rounded-full bg-purple-100 text-purple-800 flex items-center justify-center font-semibold text-3xl">
+                                JD</div>
+                            <div
+                                class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-xl">João da Silva</h2>
+                            <p class="text-gray-600">Desenvolvedor Front-end</p>
+                            <p class="text-sm text-gray-500">Data de ingresso: 15/05/2024</p>
+                        </div>
+                    </div>
+
+                    <!-- Gamification Progress -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="level-indicator">5</div>
+                                <div>
+                                    <p class="text-sm font-medium">Nível 5 - Explorador</p>
+                                    <p class="text-xs text-gray-500">Próximo nível: 1200 XP</p>
+                                </div>
+                            </div>
+                            <div class="streak">
+                                <i class="fas fa-fire mr-1"></i> 7 dias
+                            </div>
+                        </div>
+                        <div class="xp-bar">
+                            <div class="xp-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Training Progress -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">Progresso nos Treinamentos</span>
+                            <span class="font-semibold">35%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 35%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <p class="text-sm text-gray-600">Treinamentos</p>
+                            <p class="text-xl font-bold">3/8</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <p class="text-sm text-gray-600">Horas</p>
+                            <p class="text-xl font-bold">5h</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <p class="text-sm text-gray-600">Conquistas</p>
+                            <p class="text-xl font-bold">3</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg text-center">
+                            <p class="text-sm text-gray-600">Posição</p>
+                            <p class="text-xl font-bold">3º</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges Section -->
+                <div class="training-card bg-white p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">Minhas Conquistas</h3>
+                        <span class="text-sm text-purple-600 font-medium">3/12</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="badge badge-earned bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-medal text-2xl"></i>
+                            </div>
+                            <p class="text-xs mt-2 text-center font-medium">Iniciante</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="badge badge-earned bg-blue-100 text-blue-600">
+                                <i class="fas fa-book-reader text-2xl"></i>
+                            </div>
+                            <p class="text-xs mt-2 text-center font-medium">Leitor</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="badge badge-earned bg-green-100 text-green-600">
+                                <i class="fas fa-check-circle text-2xl"></i>
+                            </div>
+                            <p class="text-xs mt-2 text-center font-medium">Primeiros Passos</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="badge badge-locked bg-gray-100 text-gray-400">
+                                <i class="fas fa-star text-2xl"></i>
+                            </div>
+                            <p class="text-xs mt-2 text-center font-medium">Estrela</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="badge badge-locked bg-purple-100 text-purple-400">
+                                <i class="fas fa-rocket text-2xl"></i>
+                            </div>
+                            <p class="text-xs mt-2 text-center font-medium">Explorador</p>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="badge badge-locked bg-red-100 text-red-400">
+                                <i class="fas fa-trophy text-2xl"></i>
+                            </div>
+                            <p class="text-xs mt-2 text-center font-medium">Campeão</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="conquistas.html"
+                            class="text-sm text-purple-600 hover:underline font-medium inline-flex items-center">
+                            Ver todas conquistas <i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Daily Quest -->
+                <div class="training-card bg-white p-6">
+                    <h3 class="font-bold text-lg mb-4">Missão Diária</h3>
+
+                    <div class="quest-card quest-primary p-4 rounded-lg mb-3">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-purple-100 text-purple-800 p-2 rounded-lg">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Completar 1 treinamento</h4>
+                                    <p class="text-sm text-gray-600 mt-1">+20 XP</p>
+                                </div>
+                            </div>
+                            <div class="progress-ring-container">
+                                <svg class="progress-ring" width="80" height="80">
+                                    <circle class="progress-ring-circle" stroke="#e5e7eb" stroke-width="6"
+                                        fill="transparent" r="35" cx="40" cy="40" />
+                                    <circle class="progress-ring-circle" stroke="#6a0dad" stroke-width="6"
+                                        fill="transparent" r="35" cx="40" cy="40" stroke-dasharray="219.8"
+                                        stroke-dashoffset="153.86" stroke-linecap="round" />
+                                </svg>
+                                <div class="progress-ring-text">30%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card quest-secondary p-4 rounded-lg mb-3">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-blue-100 text-blue-800 p-2 rounded-lg">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Interagir no fórum</h4>
+                                    <p class="text-sm text-gray-600 mt-1">+15 XP</p>
+                                </div>
+                            </div>
+                            <div class="progress-ring-container">
+                                <svg class="progress-ring" width="80" height="80">
+                                    <circle class="progress-ring-circle" stroke="#e5e7eb" stroke-width="6"
+                                        fill="transparent" r="35" cx="40" cy="40" />
+                                    <circle class="progress-ring-circle" stroke="#2d00b3" stroke-width="6"
+                                        fill="transparent" r="35" cx="40" cy="40" stroke-dasharray="219.8"
+                                        stroke-dashoffset="197.82" stroke-linecap="round" />
+                                </svg>
+                                <div class="progress-ring-text">10%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-card quest-success p-4 rounded-lg">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-green-100 text-green-800 p-2 rounded-lg">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Manter sequência de dias</h4>
+                                    <p class="text-sm text-gray-600 mt-1">+5 XP/dia</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="streak">
+                                    <i class="fas fa-fire mr-1"></i> 7 dias
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mentor Section -->
+                <div class="training-card bg-white p-6">
+                    <h3 class="font-bold text-lg mb-4">Meu Mentor</h3>
+                    <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                        <div class="relative">
+                            <div
+                                class="w-14 h-14 rounded-full bg-purple-200 text-purple-800 flex items-center justify-center font-semibold text-xl">
+                                AM</div>
+                            <div
+                                class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 border-2 border-white flex items-center justify-center">
+                                <i class="fas fa-check text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">Ana Maria</h4>
+                            <p class="text-sm text-gray-600">Tech Lead - Front-end</p>
+                            <div class="flex space-x-3 mt-2">
+                                <a href="#" class="text-blue-500 hover:text-blue-700 text-lg">
+                                    <i class="fas fa-comment-dots"></i>
+                                </a>
+                                <a href="#" class="text-green-500 hover:text-green-700 text-lg">
+                                    <i class="fas fa-calendar-check"></i>
+                                </a>
+                                <a href="#" class="text-purple-500 hover:text-purple-700 text-lg">
+                                    <i class="fas fa-phone-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="font-bold text-lg mb-4">Agenda de Treinamentos</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start p-3 bg-blue-50 rounded-lg">
+                                <div class="bg-blue-100 text-blue-800 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Segurança da Informação</h4>
+                                    <p class="text-sm text-gray-600">25/05/2024 - 14:00 às 16:00</p>
+                                    <button
+                                        class="mt-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full inline-flex items-center">
+                                        <i class="fas fa-calendar-plus mr-1"></i> Agendar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start p-3 bg-purple-50 rounded-lg">
+                                <div class="bg-purple-100 text-purple-800 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-laptop-code"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Workshop React</h4>
+                                    <p class="text-sm text-gray-600">28/05/2024 - 10:00 às 12:00</p>
+                                    <button
+                                        class="mt-2 text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-full inline-flex items-center">
+                                        <i class="fas fa-calendar-plus mr-1"></i> Agendar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Training Content -->
+            <div class="w-full lg:w-2/3 space-y-6">
+                <!-- Main Training Card -->
+                <div class="training-card bg-white p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold">Centro de Treinamentos</h1>
+                            <p class="text-gray-600">Complete os treinamentos para subir de nível e desbloquear
+                                conquistas</p>
+                        </div>
+                        <div class="flex items-center space-x-3 mt-3 md:mt-0">
+                            <div class="relative">
+                                <input type="text" placeholder="Buscar treinamentos..."
+                                    class="pl-10 pr-4 py-2 border rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-purple-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                            <select
+                                class="text-sm border rounded-full px-3 py-2 focus:outline-none focus:ring-1 focus:ring-purple-500">
+                                <option>Todos</option>
+                                <option>Obrigatórios</option>
+                                <option>Recomendados</option>
+                                <option>Opcionais</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="flex border-b mb-6">
+                        <button class="tab-button px-4 py-2 active">Todos os Treinamentos</button>
+                        <button class="tab-button px-4 py-2">Em Andamento</button>
+                        <button class="tab-button px-4 py-2">Concluídos</button>
+                        <button class="tab-button px-4 py-2">Próximos</button>
+                    </div>
+
+                    <!-- Current Training Highlight -->
+                    <div class="highlight-card bg-purple-50 rounded-lg p-4 mb-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-purple-100 text-purple-800 p-3 rounded-lg">
+                                <i class="fas fa-exclamation-circle text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-semibold text-lg">Treinamento prioritário: <span
+                                        class="text-purple-800">Segurança da Informação</span></h3>
+                                <p class="text-gray-600">Este treinamento obrigatório deve ser concluído nos primeiros
+                                    15 dias</p>
+                                <div class="mt-3 flex flex-wrap gap-2">
+                                    <span
+                                        class="text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-flex items-center">
+                                        <i class="fas fa-bolt mr-1"></i> +50 XP
+                                    </span>
+                                    <span
+                                        class="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full inline-flex items-center">
+                                        <i class="fas fa-medal mr-1"></i> Conquista disponível
+                                    </span>
+                                    <span
+                                        class="text-xs bg-purple-100 text-purple-800 px-3 py-1 rounded-full inline-flex items-center">
+                                        <i class="fas fa-clock mr-1"></i> Prazo: 30/05/2024
+                                    </span>
+                                </div>
+                                <button
+                                    class="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                                    <i class="fas fa-play mr-2"></i> Iniciar Treinamento
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Training List -->
+                    <div class="space-y-4">
+                        <!-- Mandatory Training -->
+                        <div class="training-item p-5 rounded-lg bg-white">
+                            <div class="flex flex-col md:flex-row md:items-start justify-between">
+                                <div class="flex items-start space-x-4 mb-4 md:mb-0">
+                                    <div class="training-icon mandatory">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg">Segurança da Informação</h3>
+                                        <p class="text-gray-600">Treinamento obrigatório sobre políticas de segurança e
+                                            boas práticas</p>
+                                        <div class="flex flex-wrap items-center mt-2 gap-3">
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="far fa-clock mr-1"></i> 2 horas
+                                            </span>
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="fas fa-calendar-alt mr-1"></i> Prazo: 30/05/2024
+                                            </span>
+                                            <span
+                                                class="text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-flex items-center">
+                                                <i class="fas fa-bolt mr-1"></i> +50 XP
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end space-y-2">
+                                    <span class="status-badge status-pending">Pendente</span>
+                                    <button
+                                        class="text-sm bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                                        <i class="fas fa-play mr-1"></i> Iniciar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- In Progress Training -->
+                        <div class="training-item p-5 rounded-lg bg-white">
+                            <div class="flex flex-col md:flex-row md:items-start justify-between">
+                                <div class="flex items-start space-x-4 mb-4 md:mb-0">
+                                    <div class="training-icon mandatory">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg">Padrões de Código Vivo</h3>
+                                        <p class="text-gray-600">Conheça os padrões e boas práticas de desenvolvimento
+                                            na Vivo</p>
+                                        <div class="flex flex-wrap items-center mt-2 gap-3">
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="far fa-clock mr-1"></i> 1.5 horas
+                                            </span>
+                                            <div class="flex items-center space-x-2">
+                                                <div class="w-24">
+                                                    <div class="progress-bar">
+                                                        <div class="progress-fill" style="width: 60%"></div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-xs text-gray-500">60%</span>
+                                            </div>
+                                            <span
+                                                class="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full inline-flex items-center">
+                                                <i class="fas fa-star mr-1"></i> +30 XP
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end space-y-2">
+                                    <span class="status-badge status-in-progress">Em andamento</span>
+                                    <button
+                                        class="text-sm bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                                        <i class="fas fa-sync-alt mr-1"></i> Continuar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Training -->
+                        <div class="training-item p-5 rounded-lg bg-white">
+                            <div class="flex flex-col md:flex-row md:items-start justify-between">
+                                <div class="flex items-start space-x-4 mb-4 md:mb-0">
+                                    <div class="training-icon mandatory">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg">Cultura Vivo</h3>
+                                        <p class="text-gray-600">Conheça os valores, missão e cultura organizacional da
+                                            Vivo</p>
+                                        <div class="flex flex-wrap items-center mt-2 gap-3">
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="far fa-clock mr-1"></i> 1 hora
+                                            </span>
+                                            <span class="text-sm text-green-500 inline-flex items-center">
+                                                <i class="fas fa-check-circle mr-1"></i> Concluído em: 18/05/2024
+                                            </span>
+                                            <span
+                                                class="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full inline-flex items-center">
+                                                <i class="fas fa-trophy mr-1"></i> +20 XP
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end space-y-2">
+                                    <span class="status-badge status-completed">Concluído</span>
+                                    <button
+                                        class="text-sm border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg inline-flex items-center">
+                                        <i class="fas fa-certificate mr-1"></i> Certificado
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommended Training -->
+                        <div class="training-item p-5 rounded-lg bg-white">
+                            <div class="flex flex-col md:flex-row md:items-start justify-between">
+                                <div class="flex items-start space-x-4 mb-4 md:mb-0">
+                                    <div class="training-icon recommended">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg">Arquitetura de Sistemas</h3>
+                                        <p class="text-gray-600">Visão geral da arquitetura dos principais sistemas da
+                                            Vivo</p>
+                                        <div class="flex flex-wrap items-center mt-2 gap-3">
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="far fa-clock mr-1"></i> 2.5 horas
+                                            </span>
+                                            <span class="text-sm text-blue-500 inline-flex items-center">
+                                                <i class="fas fa-star mr-1"></i> Recomendado para sua área
+                                            </span>
+                                            <span
+                                                class="text-xs bg-purple-100 text-purple-800 px-3 py-1 rounded-full inline-flex items-center">
+                                                <i class="fas fa-bolt mr-1"></i> +40 XP
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end space-y-2">
+                                    <span class="status-badge status-pending">Pendente</span>
+                                    <button
+                                        class="text-sm bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                                        <i class="fas fa-play mr-1"></i> Iniciar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Optional Training -->
+                        <div class="training-item p-5 rounded-lg bg-white">
+                            <div class="flex flex-col md:flex-row md:items-start justify-between">
+                                <div class="flex items-start space-x-4 mb-4 md:mb-0">
+                                    <div class="training-icon optional">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg">Gestão de Tempo</h3>
+                                        <p class="text-gray-600">Técnicas e ferramentas para melhorar sua produtividade
+                                        </p>
+                                        <div class="flex flex-wrap items-center mt-2 gap-3">
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="far fa-clock mr-1"></i> 1 hora
+                                            </span>
+                                            <span class="text-sm text-gray-500 inline-flex items-center">
+                                                <i class="fas fa-info-circle mr-1"></i> Opcional
+                                            </span>
+                                            <span
+                                                class="text-xs bg-gray-100 text-gray-800 px-3 py-1 rounded-full inline-flex items-center">
+                                                <i class="fas fa-bolt mr-1"></i> +15 XP
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end space-y-2">
+                                    <span class="status-badge status-pending">Pendente</span>
+                                    <button
+                                        class="text-sm border border-purple-600 hover:bg-purple-50 text-purple-600 px-4 py-2 rounded-lg inline-flex items-center">
+                                        <i class="fas fa-info-circle mr-1"></i> Detalhes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Path -->
+                <div class="training-card bg-white p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                        <div>
+                            <h3 class="font-bold text-lg">Trilha Recomendada para Desenvolvedores Front-end</h3>
+                            <p class="text-gray-600">Complete esta trilha para desbloquear a conquista "Mestre
+                                Front-end"</p>
+                        </div>
+                        <div class="flex items-center space-x-2 mt-2 md:mt-0">
+                            <span
+                                class="text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-flex items-center">
+                                <i class="fas fa-bolt mr-1"></i> Bônus de trilha: +100 XP
+                            </span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-blue-100 text-blue-800 p-2 rounded-lg">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">1. Padrões de Código</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Conclusão: 60%</p>
+                                    <div class="progress-bar mt-2">
+                                        <div class="progress-fill" style="width: 60%"></div>
+                                    </div>
+                                    <div class="mt-3 flex items-center space-x-1">
+                                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                            +30 XP
+                                        </span>
+                                    </div>
+                                    <button
+                                        class="mt-2 text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full inline-flex items-center">
+                                        Continuar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-purple-100 text-purple-800 p-2 rounded-lg">
+                                    <i class="fab fa-react"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">2. Workshop React</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Próxima sessão: 28/05</p>
+                                    <div class="mt-3 flex items-center space-x-1">
+                                        <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                                            +40 XP
+                                        </span>
+                                    </div>
+                                    <button
+                                        class="mt-2 text-sm bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-full inline-flex items-center">
+                                        <i class="fas fa-calendar-plus mr-1"></i> Agendar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition">
+                            <div class="flex items-start space-x-3">
+                                <div class="bg-green-100 text-green-800 p-2 rounded-lg">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">3. Mobile First</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Duração: 1.5h</p>
+                                    <div class="mt-3 flex items-center space-x-1">
+                                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                                            +30 XP
+                                        </span>
+                                    </div>
+                                    <button
+                                        class="mt-2 text-sm border border-green-600 hover:bg-green-50 text-green-600 px-3 py-1 rounded-full inline-flex items-center">
+                                        Pré-requisitos
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button
+                            class="text-sm bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg inline-flex items-center">
+                            <i class="fas fa-rocket mr-2"></i> Iniciar Trilha Completa
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="training-card bg-white p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg">Ranking do Mês</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-600">Seu posicionamento:</span>
+                            <span class="text-sm font-bold text-purple-600">3º lugar</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="leaderboard-item flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div
+                                class="w-10 h-10 rounded-full bg-yellow-100 text-yellow-800 flex items-center justify-center font-bold text-lg mr-4">
+                                1</div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Carlos Mendes</h4>
+                                <p class="text-xs text-gray-500">Desenvolvedor Back-end</p>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p class="text-sm font-semibold">1250 XP</p>
+                                    <p class="text-xs text-gray-500">5 treinamentos</p>
+                                </div>
+                                <div
+                                    class="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="leaderboard-item flex items-center p-4 bg-gray-50 rounded-lg">
+                            <div
+                                class="w-10 h-10 rounded-full bg-gray-200 text-gray-800 flex items-center justify-center font-bold text-lg mr-4">
+                                2</div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Ana Paula</h4>
+                                <p class="text-xs text-gray-500">UX Designer</p>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p class="text-sm font-semibold">980 XP</p>
+                                    <p class="text-xs text-gray-500">4 treinamentos</p>
+                                </div>
+                                <div
+                                    class="w-8 h-8 rounded-full bg-gray-400 text-white flex items-center justify-center">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="leaderboard-item flex items-center p-4 bg-purple-50 rounded-lg border border-purple-100">
+                            <div
+                                class="w-10 h-10 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-lg mr-4">
+                                3</div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">João da Silva</h4>
+                                <p class="text-xs text-gray-500">Desenvolvedor Front-end</p>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="text-right">
+                                    <p class="text-sm font-semibold">850 XP</p>
+                                    <p class="text-xs text-gray-500">3 treinamentos</p>
+                                </div>
+                                <div
+                                    class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="#"
+                            class="text-sm text-purple-600 hover:underline font-medium inline-flex items-center">
+                            Ver ranking completo <i class="fas fa-chevron-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="floating-action" id="helpButton">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <!-- Floating Notification (hidden by default) -->
+    <div class="floating-notification hidden" id="notification">
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-lg max-w-xs">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium">+10 XP conquistados!</p>
+                    <p class="text-xs">Você completou o treinamento de Cultura Vivo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // In a real app, this would filter the training list
+                    console.log('Switched to tab:', this.textContent.trim());
+                });
+            });
+
+            // Training item click handlers
+            const trainingItems = document.querySelectorAll('.training-item');
+            trainingItems.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    // Don't navigate if clicking on a button
+                    if (!e.target.closest('button')) {
+                        console.log('Viewing training details:',
+                            this.querySelector('h3').textContent);
+                    }
+                });
+            });
+
+            // Gamification - simulate XP gain
+            const xpButtons = document.querySelectorAll('.training-item button:not(.border)');
+            xpButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const xpFill = document.querySelector('.xp-fill');
+                    const currentWidth = parseFloat(xpFill.style.width) || 65;
+                    const newWidth = Math.min(currentWidth + 5, 100);
+                    xpFill.style.width = `${newWidth}%`;
+
+                    // Show XP gained animation
+                    const xpGained = document.createElement('div');
+                    xpGained.className = 'absolute -top-2 -right-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full animate-bounce';
+                    xpGained.innerHTML = '+5 XP';
+                    this.appendChild(xpGained);
+
+                    setTimeout(() => {
+                        xpGained.remove();
+                    }, 1000);
+
+                    // Show notification
+                    const notification = document.getElementById('notification');
+                    notification.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 3000);
+                });
+            });
+
+            // Help button
+            const helpButton = document.getElementById('helpButton');
+            helpButton.addEventListener('click', function () {
+                alert('Central de Ajuda: Entre em contato com seu mentor ou com o RH para dúvidas sobre os treinamentos.');
+            });
+
+            // Simulate progress rings animation
+            const progressRings = document.querySelectorAll('.progress-ring-circle');
+            progressRings.forEach(ring => {
+                const circumference = 2 * Math.PI * 35;
+                const offset = circumference - (parseInt(ring.getAttribute('stroke-dashoffset')) / 100) * circumference;
+                ring.style.strokeDasharray = circumference;
+                ring.style.strokeDashoffset = offset;
+            });
+        });
+    </script>
+</body>
+
+</html>

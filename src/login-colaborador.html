@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivo OnboardingX - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .login-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .login-card {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .vivo-primary {
+            color: #5e00a5;
+        }
+
+        .vivo-secondary {
+            color: #2d00b3;
+        }
+
+        .vivo-dark-purple {
+            color: #4b0082;
+        }
+
+        .vivo-dark-blue {
+            color: #000080;
+        }
+
+        .vivo-gradient {
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .vivo-gradient-text {
+            background: linear-gradient(135deg, #5e00a5 0%, #2d00b3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+        }
+
+        .input-field:focus {
+            border-color: #6a0dad;
+            box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1);
+        }
+
+        .btn-login {
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(106, 13, 173, 0.2);
+        }
+
+        .vivo-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background-color: #f3f4f6;
+            color: #4b0082;
+            flex-shrink: 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 12px 0;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .login-form-container {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .login-image {
+                display: none;
+            }
+
+            .left-content {
+                text-align: center;
+            }
+
+            .feature-items {
+                display: none;
+            }
+
+            .mobile-welcome {
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center p-4">
+    <div class="login-container w-full">
+        <div class="flex flex-col lg:flex-row gap-8 items-center">
+            <!-- Left side - Content -->
+            <div class="w-full lg:w-1/2 p-8 md:p-12 left-content">
+                <div class="mb-12">
+                    <img src="https://www.vivo.com.br/content/dam/vivo-sites/vivo-com-br/homepage/logo-vivo.svg"
+                        alt="Vivo Logo" class="h-10 mx-auto lg:mx-0">
+                </div>
+
+                <div class="mb-12 text-left lg:text-left mobile-welcome">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center lg:text-left">Bem-vindo a
+                        Vivo: OnboardingX!</h1>
+                    <p class="text-lg text-gray-600 text-center lg:text-left">Plataforma que irá te auxiliar em todo
+                        processo de Onboarding em um só lugar!</p>
+                </div>
+
+                <div class="space-y-2 max-w-lg feature-items">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-users-cog text-xl"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="font-semibold text-gray-800 text-lg">Integração Completa</h3>
+                            <p class="text-gray-600">Acesse todos os recursos necessários para sua jornada de
+                                integração.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt text-xl"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="font-semibold text-gray-800 text-lg">Documentação Centralizada</h3>
+                            <p class="text-gray-600">Todos os materiais e guias em um único lugar.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h3 class="font-semibold text-gray-800 text-lg">Acompanhamento</h3>
+                            <p class="text-gray-600">Monitore seu progresso durante o período de onboarding.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side - Login Form -->
+            <div class="w-full lg:w-1/2 flex justify-center">
+                <div class="login-form-container p-8 md:p-12 rounded-xl w-full max-w-md">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800">Acesse sua conta</h2>
+                    </div>
+
+                    <form id="loginForm" class="space-y-5">
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email
+                                Corporativo</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                                <input type="email" id="email" name="email" required
+                                    class="input-field pl-10 w-full py-2.5 px-3 focus:outline-none"
+                                    placeholder="seu.email@vivo.com.br">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <input type="password" id="password" name="password" required
+                                    class="input-field pl-10 w-full py-2.5 px-3 focus:outline-none"
+                                    placeholder="Digite sua senha">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <button type="button" id="togglePassword" class="text-gray-400 hover:text-gray-600">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input id="remember-me" name="remember-me" type="checkbox"
+                                    class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                                <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                                    Lembrar de mim
+                                </label>
+                            </div>
+
+                            <div class="text-sm">
+                                <a href="#" class="font-medium text-purple-600 hover:underline">
+                                    Esqueceu sua senha?
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button type="submit"
+                                class="btn-login w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+                                ACESSAR PLATAFORMA
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <p class="text-gray-600">
+                                Novo colaborador? <a href="#"
+                                    class="font-medium text-purple-600 hover:underline">Solicite seu acesso</a>
+                            </p>
+                        </div>
+                    </form>
+
+                    <div class="mt-8 text-center">
+                        <p class="text-xs text-gray-500">
+                            © 2025 Vivo OnboardingX. Todos os direitos reservados.
+                            <br>
+                            <a href="#" class="text-purple-600 hover:underline">Termos de uso</a> |
+                            <a href="#" class="text-purple-600 hover:underline">Política de privacidade</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle password visibility
+            const togglePassword = document.querySelector('#togglePassword');
+            const password = document.querySelector('#password');
+
+            togglePassword.addEventListener('click', function () {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+            // Form submission
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                // Simulate loading
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Autenticando...';
+                submitBtn.disabled = true;
+
+                // Simulate API call
+                setTimeout(() => {
+                    // Here you would typically make an API call
+                    console.log('Login attempt with:', { email, password });
+
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+
+                    // Show success (in a real app, you would redirect)
+                    alert('Login bem-sucedido! Redirecionando...');
+                    // window.location.href = 'dashboard.html';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+
+</html>

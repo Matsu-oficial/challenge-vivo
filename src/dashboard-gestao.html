@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivo OnboardingX - Gestão</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .vivo-gradient {
+            background: linear-gradient(135deg, #6a0dad 0%, #00008b 100%);
+        }
+
+        .vivo-gradient-text {
+            background: linear-gradient(135deg, #5e00a5 0%, #2d00b3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-track {
+            height: 4px;
+            background-color: #e5e7eb;
+        }
+
+        .progress-track::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 8%;
+            background-color: #6a0dad;
+            transition: width 0.5s ease;
+        }
+
+        .step-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .step-indicator.completed::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            width: 100px;
+            height: 2px;
+            background-color: #6a0dad;
+        }
+
+        .mentee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #FF5722;
+        }
+
+        .initials-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .journey-connector {
+            position: absolute;
+            top: 50%;
+            left: -20px;
+            width: 20px;
+            height: 2px;
+            background-color: #e5e7eb;
+        }
+
+        .journey-connector.completed {
+            background-color: #6a0dad;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .alert-high {
+            border-left: 4px solid #EF4444;
+        }
+
+        .alert-medium {
+            border-left: 4px solid #F59E0B;
+        }
+
+        .alert-low {
+            border-left: 4px solid #3B82F6;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen bg-gray-50">
+    <!-- Side Navigation -->
+    <div class="w-20 md:w-64 bg-white shadow-lg flex flex-col transition-all duration-300">
+        <!-- Logo -->
+        <div class="p-4 flex items-center justify-center border-b">
+            <img src="https://www.vivo.com.br/content/dam/vivo-sites/vivo-com-br/homepage/logo-vivo.svg" alt="Vivo Logo"
+                class="h-8">
+            <span class="ml-2 text-xl font-bold vivo-gradient-text hidden md:block">OnboardingX</span>
+        </div>
+
+        <!-- User Profile -->
+        <div class="p-4 flex items-center border-b">
+            <div class="relative">
+                <div class="w-12 h-12 rounded-full bg-purple-600 initials-avatar">MG</div>
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+            </div>
+            <div class="ml-3 hidden md:block">
+                <p class="font-semibold">Mariana Gomes</p>
+                <p class="text-xs text-gray-500">Gestora de Onboarding</p>
+            </div>
+        </div>
+
+        <!-- Menu -->
+        <nav class="flex-1 overflow-y-auto">
+            <ul class="p-2">
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg bg-purple-50 text-purple-700">
+                        <i class="fas fa-tachometer-alt text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-chart-line text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Métricas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-exclamation-triangle text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Alertas</span>
+                        <span
+                            class="ml-auto bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full hidden md:block">5</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-users text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Buddies</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-user-plus text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Novos Colaboradores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <i class="fas fa-cog text-purple-600 mr-3 text-lg"></i>
+                        <span class="hidden md:block">Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Footer -->
+        <div class="p-4 border-t">
+            <a href="#" class="flex items-center p-2 text-red-600 rounded-lg hover:bg-red-50">
+                <i class="fas fa-sign-out-alt mr-3 text-lg"></i>
+                <span class="hidden md:block">Sair</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+        <!-- Header -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-semibold text-gray-800">Dashboard de Gestão</h1>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="p-2 rounded-full hover:bg-gray-100 relative">
+                        <i class="fas fa-bell text-gray-600 text-lg"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 initials-avatar text-sm md:hidden">MG</div>
+                    <span class="ml-2 text-sm font-medium hidden md:block">Mariana Gomes</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="p-4 md:p-6">
+            <!-- Welcome Section -->
+            <div class="vivo-gradient text-white rounded-xl p-6 mb-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-bold mb-2">Bem-vinda, Mariana!</h2>
+                        <p class="opacity-90 text-sm md:text-base">Você está gerenciando 12 buddies e 35 novos
+                            colaboradores em onboarding.</p>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                        <i class="fas fa-chart-pie text-2xl md:text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Total Onboardings -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-users text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Onboardings</h3>
+                            <p class="text-sm text-gray-500">Total em andamento</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-800 mr-2">35</span>
+                        <span class="text-sm text-gray-500 mb-1">colaboradores</span>
+                        <span class="ml-auto text-green-600 text-sm font-medium">+8%</span>
+                    </div>
+                </div>
+
+                <!-- Average Time -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-clock text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Tempo Médio</h3>
+                            <p class="text-sm text-gray-500">Dias para conclusão</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-800 mr-2">78</span>
+                        <span class="text-sm text-gray-500 mb-1">dias</span>
+                        <span class="ml-auto text-green-600 text-sm font-medium">-5%</span>
+                    </div>
+                </div>
+
+                <!-- Engagement Score -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-heart text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Engajamento</h3>
+                            <p class="text-sm text-gray-500">Score médio</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-800 mr-2">82</span>
+                        <span class="text-sm text-gray-500 mb-1">/100</span>
+                        <span class="ml-auto text-green-600 text-sm font-medium">+3%</span>
+                    </div>
+                </div>
+
+                <!-- Satisfaction -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-100 p-3 rounded-full mr-4">
+                            <i class="fas fa-smile text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700">Satisfação</h3>
+                            <p class="text-sm text-gray-500">Avaliação média</p>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <span class="text-3xl font-bold text-gray-800 mr-2">4.7</span>
+                        <span class="text-sm text-gray-500 mb-1">/5.0</span>
+                        <span class="ml-auto text-green-600 text-sm font-medium">+0.2</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Performance Comparison -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Desempenho Mensal</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">2023</button>
+                            <button class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">2022</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Onboarding Progress -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Progresso por Etapa</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-xs bg-purple-100 text-purple-700 rounded-full">Atual</button>
+                            <button class="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">Média</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts and Actions -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Alerts -->
+                <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-1">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Alertas Recentes</h3>
+                        <span class="text-xs text-purple-600 font-medium">5 novos</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- High Priority Alert -->
+                        <div class="p-3 bg-red-50 rounded-lg alert-high">
+                            <div class="flex items-start">
+                                <div class="bg-red-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-exclamation text-red-600 text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">Atraso no onboarding</p>
+                                    <p class="text-xs text-gray-500">Carlos Oliveira está com 15 dias de atraso na etapa
+                                        3</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <button
+                                            class="text-xs bg-white text-red-600 border border-red-200 px-2 py-1 rounded">Ver
+                                            detalhes</button>
+                                        <button class="text-xs bg-red-600 text-white px-2 py-1 rounded">Atribuir
+                                            buddy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medium Priority Alert -->
+                        <div class="p-3 bg-yellow-50 rounded-lg alert-medium">
+                            <div class="flex items-start">
+                                <div class="bg-yellow-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-exclamation text-yellow-600 text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">Baixo engajamento</p>
+                                    <p class="text-xs text-gray-500">Juliana Santos com score de 45/100</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <button
+                                            class="text-xs bg-white text-yellow-600 border border-yellow-200 px-2 py-1 rounded">Ver
+                                            detalhes</button>
+                                        <button class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Enviar
+                                            pesquisa</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Low Priority Alert -->
+                        <div class="p-3 bg-blue-50 rounded-lg alert-low">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-info text-blue-600 text-sm"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">Buddy indisponível</p>
+                                    <p class="text-xs text-gray-500">Ana Silva entrará de férias por 20 dias</p>
+                                    <div class="mt-2 flex space-x-2">
+                                        <button
+                                            class="text-xs bg-white text-blue-600 border border-blue-200 px-2 py-1 rounded">Ver
+                                            detalhes</button>
+                                        <button
+                                            class="text-xs bg-blue-600 text-white px-2 py-1 rounded">Substituir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            class="w-full py-2 text-purple-600 text-sm font-medium rounded-lg border border-purple-200 hover:bg-purple-50">
+                            Ver todos os alertas
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Potential Buddies -->
+                <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-1">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Potenciais Buddies</h3>
+                        <span class="text-xs text-purple-600 font-medium">8 disponíveis</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Buddy Candidate 1 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="w-10 h-10 rounded-full bg-indigo-600 initials-avatar">RF</div>
+                            <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium">Ricardo Ferreira</p>
+                                <p class="text-xs text-gray-500">Desenvolvedor Sênior - 5 anos na Vivo</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Score:
+                                    92</span>
+                            </div>
+                        </div>
+
+                        <!-- Buddy Candidate 2 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="w-10 h-10 rounded-full bg-blue-600 initials-avatar">PS</div>
+                            <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium">Patricia Silva</p>
+                                <p class="text-xs text-gray-500">Analista de Dados - 3 anos na Vivo</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Score:
+                                    88</span>
+                            </div>
+                        </div>
+
+                        <!-- Buddy Candidate 3 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="w-10 h-10 rounded-full bg-purple-600 initials-avatar">AM</div>
+                            <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium">André Mendes</p>
+                                <p class="text-xs text-gray-500">Product Manager - 4 anos na Vivo</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Score:
+                                    85</span>
+                            </div>
+                        </div>
+
+                        <!-- Buddy Candidate 4 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="w-10 h-10 rounded-full bg-pink-600 initials-avatar">LM</div>
+                            <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium">Luiza Martins</p>
+                                <p class="text-xs text-gray-500">UX Designer - 2 anos na Vivo</p>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Score:
+                                    83</span>
+                            </div>
+                        </div>
+
+                        <button
+                            class="w-full py-2 text-purple-600 text-sm font-medium rounded-lg border border-purple-200 hover:bg-purple-50">
+                            Ver todos os candidatos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Onboardings -->
+                <div class="bg-white rounded-xl shadow-md p-6 lg:col-span-1">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Próximos Onboardings</h3>
+                        <span class="text-xs text-purple-600 font-medium">12 agendados</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Upcoming 1 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-calendar-day text-purple-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">15/06 - 10:00</p>
+                                <p class="text-xs text-gray-500">2 novos desenvolvedores front-end</p>
+                            </div>
+                            <div class="text-xs text-gray-500">3 dias</div>
+                        </div>
+
+                        <!-- Upcoming 2 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-calendar-day text-blue-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">18/06 - 14:30</p>
+                                <p class="text-xs text-gray-500">1 analista de dados júnior</p>
+                            </div>
+                            <div class="text-xs text-gray-500">6 dias</div>
+                        </div>
+
+                        <!-- Upcoming 3 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-calendar-day text-green-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">22/06 - 09:00</p>
+                                <p class="text-xs text-gray-500">3 product managers</p>
+                            </div>
+                            <div class="text-xs text-gray-500">10 dias</div>
+                        </div>
+
+                        <!-- Upcoming 4 -->
+                        <div class="flex items-center p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <div class="bg-orange-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-calendar-day text-orange-600 text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium">25/06 - 11:00</p>
+                                <p class="text-xs text-gray-500">1 UX designer sênior</p>
+                            </div>
+                            <div class="text-xs text-gray-500">13 dias</div>
+                        </div>
+
+                        <button
+                            class="w-full py-2 text-purple-600 text-sm font-medium rounded-lg border border-purple-200 hover:bg-purple-50">
+                            Ver todos os agendamentos
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Atividades Recentes</h3>
+                    <button class="text-purple-600 text-sm font-medium">Ver todas</button>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Activity 1 -->
+                    <div class="flex items-start pb-4 border-b border-gray-100">
+                        <div class="bg-purple-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-user-plus text-purple-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Novo buddy designado</p>
+                            <p class="text-xs text-gray-500">Ricardo Ferreira foi designado para acompanhar 2 novos devs
+                                front-end</p>
+                        </div>
+                        <span class="text-xs text-gray-400">2 horas</span>
+                    </div>
+
+                    <!-- Activity 2 -->
+                    <div class="flex items-start pb-4 border-b border-gray-100">
+                        <div class="bg-red-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-exclamation text-red-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Alerta resolvido</p>
+                            <p class="text-xs text-gray-500">Atraso no onboarding de Carlos Oliveira foi resolvido</p>
+                        </div>
+                        <span class="text-xs text-gray-400">1 dia</span>
+                    </div>
+
+                    <!-- Activity 3 -->
+                    <div class="flex items-start">
+                        <div class="bg-green-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-chart-line text-green-600 text-sm"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">Relatório mensal gerado</p>
+                            <p class="text-xs text-gray-500">Relatório de desempenho de junho disponível</p>
+                        </div>
+                        <span class="text-xs text-gray-400">2 dias</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                    datasets: [
+                        {
+                            label: '2023',
+                            data: [75, 78, 82, 85, 83, 82, null, null, null, null, null, null],
+                            borderColor: '#6a0dad',
+                            backgroundColor: 'rgba(106, 13, 173, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: '2022',
+                            data: [70, 72, 75, 77, 76, 78, 80, 82, 81, 83, 85, 84],
+                            borderColor: '#9ca3af',
+                            backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                            tension: 0.3,
+                            borderDash: [5, 5],
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' + context.raw + '% satisfação';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 60,
+                            max: 100,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Progress Chart
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+            const progressChart = new Chart(progressCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Tô na Vivo', 'Treinamentos', 'Vibe', 'Acessos', 'Buddy e CSL'],
+                    datasets: [
+                        {
+                            label: 'Atual',
+                            data: [100, 85, 45, 10, 0],
+                            backgroundColor: '#6a0dad',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Média',
+                            data: [100, 90, 75, 60, 30],
+                            backgroundColor: '#9ca3af',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return context.dataset.label + ': ' + context.raw + '% concluído';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Add hover effects to action cards
+            const actionCards = document.querySelectorAll('.bg-white.rounded-xl.shadow-md');
+            actionCards.forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    const icon = this.querySelector('div > div');
+                    if (icon.classList.contains('bg-purple-100')) {
+                        icon.classList.replace('bg-purple-100', 'bg-purple-200');
+                    } else if (icon.classList.contains('bg-blue-100')) {
+                        icon.classList.replace('bg-blue-100', 'bg-blue-200');
+                    } else if (icon.classList.contains('bg-green-100')) {
+                        icon.classList.replace('bg-green-100', 'bg-green-200');
+                    } else if (icon.classList.contains('bg-orange-100')) {
+                        icon.classList.replace('bg-orange-100', 'bg-orange-200');
+                    }
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    const icon = this.querySelector('div > div');
+                    if (icon.classList.contains('bg-purple-200')) {
+                        icon.classList.replace('bg-purple-200', 'bg-purple-100');
+                    } else if (icon.classList.contains('bg-blue-200')) {
+                        icon.classList.replace('bg-blue-200', 'bg-blue-100');
+                    } else if (icon.classList.contains('bg-green-200')) {
+                        icon.classList.replace('bg-green-200', 'bg-green-100');
+                    } else if (icon.classList.contains('bg-orange-200')) {
+                        icon.classList.replace('bg-orange-200', 'bg-orange-100');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
